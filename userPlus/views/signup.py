@@ -34,7 +34,7 @@ def register(request):
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
                 })
-                to_email = form.cleaned_data.get('EmailId')
+                to_email = form.cleaned_data.get('email')
                 send_mail(mail_subject, message, 'bharats@bientechnologies.com', [to_email], fail_silently=False)
                 return render(request, 'response.html')
             else:

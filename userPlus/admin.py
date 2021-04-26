@@ -18,22 +18,22 @@ class BaseUserAdmin(UserAdmin):
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
     change_user_password_template = None
-    list_display = ('EmailId', 'Name', 'Mobile', 'IsActive', 'is_staff',
-                    'IsVerified', 'last_login',)
+    list_display = ('email', 'name', 'mobile', 'is_active', 'is_staff',
+                    'is_verified', 'last_login',)
 
     """
     Set fieldsets to control the layout of admin “add” and “change” pages.
     """
     fieldsets = (
         (None, {
-            'fields': ('EmailId', 'password', 'Mobile')
+            'fields': ('email', 'password', 'mobile')
         }),
         ('Security', {
             'fields': (
-                'IsActive', 'is_superuser', 'is_staff', 'LastLoginIP', 'groups', 'user_permissions',),
+                'is_active', 'is_superuser', 'is_staff', 'last_login_ip', 'groups', 'user_permissions',),
         }),
         ('Important dates', {
-            'fields': ('last_login', 'CreatedOn', 'UpdatedOn',),
+            'fields': ('last_login', 'created_on', 'updated_on',),
         }),
     )
 
@@ -42,21 +42,21 @@ class BaseUserAdmin(UserAdmin):
     """
     add_fieldsets = (
         (None, {
-            'fields': ('EmailId', 'Name'),
+            'fields': ('email', 'name'),
         }),
         ('Preferences', {
-            'fields': 'IsActive',
+            'fields': 'is_active',
         }),
         ('Security', {
             'fields': ('is_superuser', 'is_staff', 'groups', 'user_permissions',),
         }),
     )
-    search_fields = ('EmailId', 'Name')
-    ordering = ('EmailId',)
-    readonly_fields = ('last_login', 'CreatedOn', 'UpdatedOn',)
+    search_fields = ('email', 'name')
+    ordering = ('email',)
+    readonly_fields = ('last_login', 'created_on', 'updated_on',)
     actions = ('reset_passwords',)
     filter_horizontal = ('groups', 'user_permissions',)
-    list_filter = ('IsActive', 'IsVerified')
+    list_filter = ('is_active', 'is_verified')
 
     def queryset(self, request):
         queryset = super(BaseUserAdmin, self).queryset(request)
@@ -86,8 +86,8 @@ class BaseUserAdmin(UserAdmin):
         response = super(BaseUserAdmin, self).response_post_save_add(request, obj)
         # change the password to a random password
         pw = obj.set_random_password()
-        print('User {}\'s new random password: {}'.format(obj.EmailId, pw))
-        self.message_user(request, 'User {}\'s new random password: {}'.format(obj.EmailId, pw), messages.SUCCESS)
+        print('User {}\'s new random password: {}'.format(obj.email, pw))
+        self.message_user(request, 'User {}\'s new random password: {}'.format(obj.email, pw), messages.SUCCESS)
         return response
 
 

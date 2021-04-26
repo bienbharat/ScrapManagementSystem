@@ -22,9 +22,9 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('Name', 'EmailId', 'Mobile', 'password')
-        exclude = ('IsActive', 'CreatedOn', 'UpdatedOn', 'IsEmailVerified', 'is_staff', 'is_superuser',
-                   'LastLoginIP', 'last_login', 'groups', 'user_permissions')
+        fields = ('name', 'email', 'mobile', 'password')
+        exclude = ('is_active', 'created_on', 'updated_on', 'is_verified', 'is_staff', 'is_superuser',
+                   'last_login_ip', 'last_login', 'groups', 'user_permissions')
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
