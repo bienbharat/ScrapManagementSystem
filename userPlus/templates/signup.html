@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+    {% autoescape off %}
+<h2 class="mt-5">Sign up</h2>
+<form method="post">
+  {% csrf_token %}
+  {% for field in form %}
+    <p>
+      {{ field.label_tag }}<br>
+      {{ field }}
+      {% if field.help_text %}
+        <small style="color: grey">{{ field.help_text }}</small>
+      {% endif %}
+      {% for error in field.errors %}
+        <p style="color: red">{{ error }}</p>
+      {% endfor %}
+    </p>
+  {% endfor %}
+  <div class="g-recaptcha mb-2" data-sitekey="6Lf7lCUaAAAAAOSMTbYTT-Zs9RRjf4SfQOcIQOvc" data-callback='onSubmit'></div>
+  <button type="submit">Sign up</button>
+  <input type="hidden" name = "email_verified" value="False">
+  {% csrf_token %}
+</form>
+
+{% endautoescape %}
+{% endblock content %}
+
+{% block script %}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+ function onSubmit(token) {
+   document.getElementById("demo-form").submit();
+ }
+</script>
+<script>
+    $('document').ready(function(){
+     var username_state = false;
+     var email_state = false;
+     $('#id_username').on('blur', function(){
+      var username = $('#id_username').val();
+      if (username == '') {
+        username_state = false;
+        return;
+      }
+
+      $.ajax({
+        url: 'api/validateusername',
+        method: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({username: username}),
+
+        success: function(response){
+          console.log(response);
+          if (response.data == 'taken' ) {
+            username_state = false;
+            $('span.myClass'). remove();
+             var txt = $("<span></span>").text("Sorry... Username already taken");
+             $("#id_username").after(txt);
+             $("span").addClass( "myClass" );
+          }
+          else if (response.data == 'not_taken') {
+            username_state = true;
+            $('span.myClass'). remove();
+            var txt = $("<span></span>").text("Username Available");
+            $("#id_username").after(txt);
+            $("span").addClass( "myClass" );
+          }
+        }
+      });
+     });
+    });
+  </script>
+{% endblock script %}
